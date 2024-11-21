@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 
-namespace SotomaYorch.RecollectionSnooker
+namespace Dante.RecollectionSnooker
 {
     public class CinemachineMobileInputProvider : CinemachineInputProvider
     {

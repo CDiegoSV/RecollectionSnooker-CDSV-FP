@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SotomaYorch.RecollectionSnooker
+namespace Dante.RecollectionSnooker
 {
     public class RS_MobileInputHandler : MobileInputHandler
     {
@@ -50,6 +50,10 @@ namespace SotomaYorch.RecollectionSnooker
                 case RS_GameStates.CONTACT_POINT_TOKEN_BY_PLAYER:
                     HandleTouchInContactPointTokenByPlayer(value);
                     break;
+                case RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER:
+                    HandleTouchInLoadingCargo(value);
+                    break;
+                    
             }
         }
 
@@ -121,6 +125,36 @@ namespace SotomaYorch.RecollectionSnooker
             else if (value.canceled)
             {
                 _goTouchCursor.SetActive(false);
+            }
+        }
+
+        protected void HandleTouchInLoadingCargo(InputAction.CallbackContext value)
+        {
+            if (value.performed)
+            {
+                if (
+                    Physics.Raycast(
+                        _camera.ScreenPointToRay(value.ReadValue<Vector2>()),
+                        out _raycastHit,
+                        50.0f,
+                        LayerMask.GetMask("CargoZone")
+                        )
+                    )
+                {
+                    _goTouchCursor.SetActive(true);
+                    _goTouchCursor.transform.position = _raycastHit.point;
+
+                    _gameReferee.CargoToBeLoaded.gameObject.transform.position = Vector3.Lerp(_goTouchCursor.transform.position, _gameReferee.CargoToBeLoaded.gameObject.transform.position, 0.5f);
+                }
+                else
+                {
+                    _goTouchCursor.SetActive(false);
+                }
+            }
+            else if(value.canceled)
+            {
+                _goTouchCursor.SetActive(false);
+                _gameReferee.GameStateMechanic(RS_GameStates.SHIFT_MONSTER_PARTS);
             }
         }
 

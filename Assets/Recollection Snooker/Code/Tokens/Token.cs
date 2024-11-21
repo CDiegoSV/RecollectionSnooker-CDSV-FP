@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using Unity.VisualScripting;
 
-namespace SotomaYorch.RecollectionSnooker
+namespace Dante.RecollectionSnooker
 {
     #region Enums
 

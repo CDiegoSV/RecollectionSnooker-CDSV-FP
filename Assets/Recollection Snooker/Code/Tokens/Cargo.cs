@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SotomaYorch.RecollectionSnooker
+namespace Dante.RecollectionSnooker
 {
     #region Enums
 
@@ -43,7 +43,7 @@ namespace SotomaYorch.RecollectionSnooker
         #region RuntimeVariables
 
         [Header("Runtime Variables")]
-        [SerializeField] protected bool isLoaded;
+        [SerializeField] protected bool _isLoaded;
 
         #endregion
 
@@ -59,18 +59,44 @@ namespace SotomaYorch.RecollectionSnooker
 
         }
 
-        //private void OnCollisionEnter(Collision other)
-        //{
-        //    ValidateCollision(other);
-        //}
 
+        private void OnCollisionEnter(Collision other)
+        {
+            if (_gameReferee.GetGameState == RS_GameStates.CANNON_CARGO ||
+                _gameReferee.GetGameState == RS_GameStates.CANNON_BY_NAVIGATION)
+            {
+                if (other.gameObject.CompareTag("Ship") && !_isLoaded)
+                {
+                    _gameReferee.CargoToBeLoaded = this;
+                }
+            }
+            else if (_gameReferee.GetGameState == RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER)
+            {
+                if (other.gameObject.CompareTag("Ship"))
+                {
+                    _isLoaded = true;
+                }
+            }
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            if (_gameReferee.GetGameState == RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER ||
+                _gameReferee.GetGameState == RS_GameStates.CANNON_BY_NAVIGATION ||
+                _gameReferee.GetGameState == RS_GameStates.CANNON_CARGO)
+            {
+                if (other.gameObject.CompareTag("Ship"))
+                {
+                    _isLoaded = false;
+                }
+            }
+        }
         private void OnDrawGizmos()
         {
             #if UNITY_EDITOR
             ValidateReferences();
             #endif
         }
-
         #endregion
 
         #region RuntimeMethods
@@ -86,7 +112,7 @@ namespace SotomaYorch.RecollectionSnooker
 
         public bool IsLoaded
         {
-            get { return isLoaded; }
+            get { return _isLoaded; }
         }
 
         #endregion
