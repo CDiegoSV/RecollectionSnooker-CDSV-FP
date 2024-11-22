@@ -69,7 +69,7 @@ namespace Dante.RecollectionSnooker
         protected int _randomTokenPos;
         [SerializeField] protected Cargo _nearestAvailableCargoToTheShip;
         protected bool _aCargoCollidedWithMonsterPart;
-        protected Cargo _cargoToBeLoaded;
+        [SerializeField] protected Cargo _cargoToBeLoaded;
         protected bool _aCargoHasTouchedTheShip;
         protected Vector3 _originalPositionOfTheFlag;
 
@@ -409,9 +409,12 @@ namespace Dante.RecollectionSnooker
             _nearestAvailableCargoToTheShip.gameObject.SetActive(false);
 
             //All cargo is set to Spooky
-            foreach (Token cargo in allCargoOfTheGame)
+            foreach (Cargo cargo in allCargoOfTheGame)
             {
-                cargo.StateMechanic(TokenStateMechanic.SET_SPOOKY);
+                if (!cargo.IsLoaded)
+                {
+                    cargo.StateMechanic(TokenStateMechanic.SET_SPOOKY);
+                }
             }
             //TODO: Set Spooky for ships, monster parts and ship pivots
 
@@ -421,7 +424,7 @@ namespace Dante.RecollectionSnooker
             //Check available cargo for flicking
             foreach (Cargo cargo in allCargoOfTheGame)
             {
-                if (!cargo.IsLoaded)
+                if (!cargo.IsLoaded && !shipOfTheGame.TypeOfCargoIsLoaded(cargo))
                 {
                     cargo.SetHighlight(true);
                     cargo.IsAvalaibleForFlicking = true;
@@ -570,12 +573,14 @@ namespace Dante.RecollectionSnooker
                 if (_aCargoCollidedWithMonsterPart)
                 {
                     GameStateMechanic(RS_GameStates.MOVE_COUNTER_BY_SANCTION);
+                    _aCargoCollidedWithMonsterPart = false;
                 }
                 else
                 {
                     if ((_aCargoHasTouchedTheShip) && (_cargoToBeLoaded != null))
                     {
                         GameStateMechanic(RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER);
+                        _aCargoHasTouchedTheShip = false;
                     }
                     else
                     {
@@ -605,15 +610,12 @@ namespace Dante.RecollectionSnooker
         protected void InitializeLoadingAndOrganizingCargoByPlayerState()
         {
             ChangeCameraTo(shipVirtualCamera);
+            shipOfTheGame.SetCargoZone = true;
 
-            foreach(Cargo cargo in allCargoOfTheGame)
-            {
-                if(cargo != _cargoToBeLoaded)
-                {
-                    cargo.gameObject.SetActive(false);
-                }
-            }
+            
             _cargoToBeLoaded.StateMechanic(TokenStateMechanic.SET_SPOOKY);
+            _cargoToBeLoaded.IsLoaded = true;
+
         }
 
         protected void ExecutingLoadingAndOrganizingCargoByPlayerState()
@@ -623,13 +625,18 @@ namespace Dante.RecollectionSnooker
 
         protected void FinalizeLoadingAndOrganizingCargoByPlayerState()
         {
+            shipOfTheGame.SetCargoZone = false;
+            shipOfTheGame.AddLoadedCargo = _cargoToBeLoaded;
+
             foreach (Cargo cargo in allCargoOfTheGame)
             {
                 cargo.gameObject.SetActive(true);
-                _cargoToBeLoaded.StateMechanic(TokenStateMechanic.SET_PHYSICS);
+                if (cargo.cargoType == _cargoToBeLoaded.cargoType)
+                {
+                    cargo.StateMechanic(TokenStateMechanic.SET_PHYSICS);
+                    cargo.IsAvalaibleForFlicking = false;
+                }
             }
-
-            _cargoToBeLoaded.gameObject.SetActive(true);
 
             _cargoToBeLoaded = null;
         }
@@ -661,7 +668,7 @@ namespace Dante.RecollectionSnooker
         {
             foreach (MonsterPart monsterPart in allMonsterPartOfTheGame)
             {
-                //monsterPart.ValidateSpaceToSpawnMonsterPart();
+                monsterPart.ValidateSpaceToSpawnMonsterParts();
             }
 
             GameStateMechanic(RS_GameStates.CHOOSE_TOKEN_BY_PLAYER);

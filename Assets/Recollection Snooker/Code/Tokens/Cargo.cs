@@ -69,6 +69,7 @@ namespace Dante.RecollectionSnooker
                 {
                     _gameReferee.CargoToBeLoaded = this;
                 }
+                
             }
             else if (_gameReferee.GetGameState == RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER)
             {
@@ -77,6 +78,7 @@ namespace Dante.RecollectionSnooker
                     _isLoaded = true;
                 }
             }
+
         }
 
         private void OnCollisionExit(Collision other)
@@ -113,6 +115,7 @@ namespace Dante.RecollectionSnooker
         public bool IsLoaded
         {
             get { return _isLoaded; }
+            set { _isLoaded = value; }
         }
 
         #endregion

@@ -36,6 +36,12 @@ namespace Dante.RecollectionSnooker
             _previousLocalRotation = _actualLocalRotation;
         }
 
+        private void OnEnable()
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            _previousLocalRotation = transform.localRotation.eulerAngles;
+        }
+
         #endregion
 
         #region Getters
