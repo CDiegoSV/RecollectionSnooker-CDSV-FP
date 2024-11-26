@@ -145,7 +145,7 @@ namespace Dante.RecollectionSnooker
                     //to obtain the point of contact
                     //other.contacts[0].point it gives us the specefic point of contact
                     _tokenPhysicalFSM.ThrowTokenAtSpecificPosition(
-                        _flagTransformValues.forward * (Mathf.Abs(_contactedFlag.DeltaXDegrees) + 1f),
+                        _flagTransformValues.forward * (Mathf.Abs(_contactedFlag.DeltaXDegrees) + 1f * 4f),
                         other.gameObject.transform.position
                         ); // other.contacts[0].point);
 
@@ -155,7 +155,7 @@ namespace Dante.RecollectionSnooker
                         _gameReferee.GameStateMechanic(RS_GameStates.CANNON_CARGO);
                         _gameReferee.DebugInMobile("CANNON " + other.gameObject.name);
                     }
-                    else //if (this as ShipPivot)
+                    else if (this as ShipPivot)
                     {
                         _gameReferee.GameStateMechanic(RS_GameStates.CANNON_BY_NAVIGATION);
                     }

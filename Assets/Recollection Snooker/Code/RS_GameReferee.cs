@@ -43,7 +43,7 @@ namespace Dante.RecollectionSnooker
         [SerializeField] protected Cargo[] allCargoOfTheGame;
         [SerializeField] protected MonsterPart[] allMonsterPartOfTheGame;
         [SerializeField] protected Ship shipOfTheGame;
-        [SerializeField] protected ShipPivot shipPivotsOfTheGame;
+        [SerializeField] protected ShipPivot shipPivotOfTheGame;
         [SerializeField] protected MonsterPart monsterHead;
 
         [Header("Camera References")]
@@ -235,9 +235,13 @@ namespace Dante.RecollectionSnooker
             InitializeState();
         }
 
-        protected bool IsAllCargoStill()
+        protected bool IsAllCargoNPivotStill()
         {
             _isAllCargoStill = true;
+            if (!shipPivotOfTheGame.IsStill)
+            {
+                _isAllCargoStill = false;
+            }
             foreach (Token token in allCargoOfTheGame)
             {
                 if (!token.IsStill)
@@ -382,7 +386,7 @@ namespace Dante.RecollectionSnooker
                 cargo.StateMechanic(TokenStateMechanic.SET_SPOOKY);
             }
 
-            if (!IsAllCargoStill())
+            if (!IsAllCargoNPivotStill())
             {
                 GameStateMechanic(RS_GameStates.CHOOSE_TOKEN_BY_PLAYER);
             }
@@ -430,6 +434,9 @@ namespace Dante.RecollectionSnooker
                     cargo.IsAvalaibleForFlicking = true;
                 }
             }
+
+            shipPivotOfTheGame.SetHighlight(true);
+            shipPivotOfTheGame.IsAvalaibleForFlicking = true;
         }
 
         protected void ExecutingChooseTokenByPlayerState()
@@ -499,12 +506,22 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeCannonByNavigationState()
         {
+            _nearestAvailableCargoToTheShip?.gameObject.SetActive(true);
+            _nearestAvailableCargoToTheShip = null;
+            _aCargoCollidedWithMonsterPart = false;
 
+            foreach (Cargo cargo in allCargoOfTheGame)
+            {
+                cargo.StateMechanic(TokenStateMechanic.SET_PHYSICS);
+            }
         }
 
         protected void ExecutingCannonByNavigationState()
         {
-
+            if (IsAllCargoNPivotStill())
+            {
+                GameStateMechanic(RS_GameStates.NAVIGATING_SHIP_OF_THE_PLAYER);
+            }
         }
 
         protected void FinalizeCannonByNavigationState()
@@ -518,12 +535,12 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeNavigatingShipOfThePlayerState()
         {
-
+            shipOfTheGame.StateMechanic(TokenStateMechanic.SET_SPOOKY);
         }
 
         protected void ExecutingNavigatingShipOfThePlayerState()
         {
-
+            //Translate near to the anchor.
         }
 
         protected void FinalizeNavigatingShipOfThePlayerState()
@@ -547,7 +564,7 @@ namespace Dante.RecollectionSnooker
 
         protected void FinalizeAnchorShipState()
         {
-
+            shipOfTheGame.StateMechanic(TokenStateMechanic.SET_PHYSICS);
         }
 
         #endregion
@@ -568,7 +585,7 @@ namespace Dante.RecollectionSnooker
 
         protected void ExecutingCannonCargoState()
         {
-            if (IsAllCargoStill())
+            if (IsAllCargoNPivotStill())
             {
                 if (_aCargoCollidedWithMonsterPart)
                 {

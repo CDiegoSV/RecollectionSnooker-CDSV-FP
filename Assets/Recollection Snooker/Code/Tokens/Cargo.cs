@@ -93,6 +93,12 @@ namespace Dante.RecollectionSnooker
                 }
             }
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            ValidateTrigger(other);
+        }
+
         private void OnDrawGizmos()
         {
             #if UNITY_EDITOR
