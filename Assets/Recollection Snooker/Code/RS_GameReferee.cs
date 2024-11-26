@@ -406,7 +406,7 @@ namespace Dante.RecollectionSnooker
         {
             _nearestAvailableCargoToTheShip = shipOfTheGame.NearestAvailableCargo();
 
-            _nearestAvailableCargoToTheShip.gameObject.SetActive(false);
+            _nearestAvailableCargoToTheShip.IsAvalaibleForFlicking = false;
 
             //All cargo is set to Spooky
             foreach (Cargo cargo in allCargoOfTheGame)
@@ -424,7 +424,7 @@ namespace Dante.RecollectionSnooker
             //Check available cargo for flicking
             foreach (Cargo cargo in allCargoOfTheGame)
             {
-                if (!cargo.IsLoaded && !shipOfTheGame.TypeOfCargoIsLoaded(cargo))
+                if (!cargo.IsLoaded && !shipOfTheGame.TypeOfCargoIsLoaded(cargo) && cargo != _nearestAvailableCargoToTheShip)
                 {
                     cargo.SetHighlight(true);
                     cargo.IsAvalaibleForFlicking = true;
@@ -757,6 +757,11 @@ namespace Dante.RecollectionSnooker
         public bool SetACargoHasTouchedTheShip
         {
             set { _aCargoHasTouchedTheShip = value; }
+        }
+
+        public Cargo[] AllCargoOfTheGame
+        {
+            get { return allCargoOfTheGame; }
         }
 
         #endregion

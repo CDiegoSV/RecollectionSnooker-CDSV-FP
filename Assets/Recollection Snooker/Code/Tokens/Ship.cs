@@ -24,7 +24,6 @@ namespace Dante.RecollectionSnooker
 
         #region References
 
-        [SerializeField] private Cargo[] allCargoOfTheGame;
         [SerializeField] private GameObject cargoZone;
 
         #endregion
@@ -77,7 +76,7 @@ namespace Dante.RecollectionSnooker
                         if (collision.gameObject.GetComponent<Cargo>().IsLoaded)
                         {
                             _loadedCargo.Remove(collision.gameObject.GetComponent<Cargo>());
-                            foreach (Cargo cargo in allCargoOfTheGame)
+                            foreach (Cargo cargo in _gameReferee.AllCargoOfTheGame)
                             {
                                 if(cargo.cargoType == collision.gameObject.GetComponent<Cargo>().cargoType)
                                 {
@@ -125,9 +124,9 @@ namespace Dante.RecollectionSnooker
         {
             float _lastShorterDistance = 1000f;
             Cargo _lastNearestCargo = null;
-            foreach (Cargo cargo in allCargoOfTheGame)
+            foreach (Cargo cargo in _gameReferee.AllCargoOfTheGame)
             {
-                if (!TypeOfCargoIsLoaded(cargo) && _lastShorterDistance > Vector3.Distance(transform.position, cargo.transform.position) || !cargo.IsLoaded)
+                if (TypeOfCargoIsLoaded(cargo) == false && _lastShorterDistance > Vector3.Distance(transform.position, cargo.transform.position) && !cargo.IsLoaded)
                 {
                     _lastShorterDistance = Vector3.Distance(transform.position, cargo.transform.position);
                     _lastNearestCargo = cargo;
