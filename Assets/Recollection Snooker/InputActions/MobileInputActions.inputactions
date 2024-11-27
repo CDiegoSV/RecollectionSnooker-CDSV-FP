@@ -56,17 +56,6 @@
                 },
                 {
                     "name": "",
-                    "id": "fe73f1cf-24b7-4bff-8d1c-322d86993bc3",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "TOUCH",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8271a691-07bd-4a1a-90d1-078c23677d23",
                     "path": "<DualShockGamepad>/{Point}",
                     "interactions": "",
