@@ -62,6 +62,8 @@ namespace Dante.RecollectionSnooker
 
         #region RuntimeVariables
 
+        protected int playerHP = 6;
+
         protected new RS_GameStates _gameState;
         protected CinemachineVirtualCameraBase _currentVirtualCameraBase;
         protected Token _interactedToken;
@@ -210,7 +212,8 @@ namespace Dante.RecollectionSnooker
                     }
                     break;
                 case RS_GameStates.VICTORY_OF_THE_PLAYER:
-                    if (_gameState == RS_GameStates.NAVIGATING_SHIP_OF_THE_PLAYER)
+                    if (_gameState == RS_GameStates.NAVIGATING_SHIP_OF_THE_PLAYER || 
+                        _gameState == RS_GameStates.CANNON_BY_NAVIGATION)
                     {
                         FinalizeCurrentState(toNextState);
                     }
@@ -409,6 +412,7 @@ namespace Dante.RecollectionSnooker
         protected void InitializeChooseTokenByPlayerState()
         {
             _nearestAvailableCargoToTheShip = shipOfTheGame.NearestAvailableCargo();
+            
 
             _nearestAvailableCargoToTheShip.IsAvalaibleForFlicking = false;
 
@@ -664,7 +668,11 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeMoveCounterBySanctionState()
         {
-
+            playerHP--;
+            if(playerHP <= 0)
+            {
+                GameStateMechanic(RS_GameStates.FAILURE_OF_THE_PLAYER);
+            }
         }
 
         protected void ExecutingMoveCounterBySanctionState()
@@ -779,6 +787,11 @@ namespace Dante.RecollectionSnooker
         public Cargo[] AllCargoOfTheGame
         {
             get { return allCargoOfTheGame; }
+        }
+
+        public Ship GetTheShipOfTheGame
+        {
+            get { return shipOfTheGame; }
         }
 
         #endregion

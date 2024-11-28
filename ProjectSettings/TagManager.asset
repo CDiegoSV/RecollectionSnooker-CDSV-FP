@@ -11,6 +11,8 @@ TagManager:
   - AnchorShip
   - Flag
   - CargoZone
+  - SliderX
+  - SliderY
   layers:
   - Default
   - TransparentFX

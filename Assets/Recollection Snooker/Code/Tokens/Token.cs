@@ -116,6 +116,10 @@ namespace Dante.RecollectionSnooker
                     _gameReferee.DebugInMobile("FLICK_TOKEN_BY_PLAYER " + other.gameObject.name);
                     ValidateTriggerWithFlag(other);
                     break;
+                case RS_GameStates.CANNON_CARGO:
+                case RS_GameStates.CANNON_BY_NAVIGATION:
+                    ValidateTriggerWithMonsterPart(other);
+                    break;
             }
         }
 
@@ -159,6 +163,17 @@ namespace Dante.RecollectionSnooker
                     {
                         _gameReferee.GameStateMechanic(RS_GameStates.CANNON_BY_NAVIGATION);
                     }
+                }
+            }
+        }
+
+        protected virtual void ValidateTriggerWithMonsterPart(Collider other)
+        {
+            if(this as Cargo || this as ShipPivot)
+            {
+                if (other.gameObject.CompareTag("MonsterLimb"))
+                {
+                    _gameReferee.GameStateMechanic(RS_GameStates.MOVE_COUNTER_BY_SANCTION);
                 }
             }
         }

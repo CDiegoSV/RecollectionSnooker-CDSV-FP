@@ -403,7 +403,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5143977119925477461, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       insertIndex: 1
-      addedObject: {fileID: 3681002142002006906}
+      addedObject: {fileID: 4057152472779318739}
     - targetCorrespondingSourceObject: {fileID: 5143977119925477461, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       insertIndex: 5
       addedObject: {fileID: 3380436684265174448}
@@ -418,7 +418,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5143977119925477461, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
   m_PrefabInstance: {fileID: 8390264366757211502}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3681002142002006906
+--- !u!114 &4057152472779318739
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -427,7 +427,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3680328283952205115}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0288e95312eb8e94b9deb9156d6d86ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d6182621a6473c4f885e7f37f7fc0c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _tokenPhysicalFSM: {fileID: 7935271704393664939}
@@ -438,9 +438,8 @@ MonoBehaviour:
     isAvailableForFlicking: 0
     isOutOfTheBoard: 0
     isBeingDragged: 0
-  allCargoOfTheGame: []
-  cargoZone: {fileID: 699464051356163120}
   _loadedCargo: []
+  cargoZone: {fileID: 699464051356163120}
 --- !u!65 &3380436684265174448
 BoxCollider:
   m_ObjectHideFlags: 0

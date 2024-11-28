@@ -130,13 +130,14 @@ namespace Dante.RecollectionSnooker
 
         public void ThrowToken(Vector3 directionForce)
         {
-            //TODO: Check Force Mode ;)
+            Debug.Log(gameObject.name + " - ThrowToken() was used.");
             _rigidbody.AddForce(directionForce, ForceMode.Impulse);
         }
 
         public void ThrowTokenAtSpecificPosition(Vector3 directionForce, Vector3 contactPoint)
         {
             _rigidbody.AddForceAtPosition(directionForce, contactPoint, ForceMode.Impulse);
+            Debug.Log(gameObject.name + " - ThrowTokenAtSpecificPosition() was used with a magnitude of: " + directionForce.magnitude);
         }
 
         public void SetHighlight(bool value)

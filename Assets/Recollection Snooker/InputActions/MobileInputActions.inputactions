@@ -67,6 +67,17 @@
                 },
                 {
                     "name": "",
+                    "id": "92a12c92-abb8-4a04-b790-8c730916636c",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TOUCH",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "619b063b-9793-46f5-9859-ec77bc4b15dd",
                     "path": "<Gyroscope>/angularVelocity",
                     "interactions": "",
