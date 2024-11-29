@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5143977119925477461, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       propertyPath: m_TagString
-      value: AnchorShip
+      value: ShipPivot
       objectReference: {fileID: 0}
     - target: {fileID: 5558300717458133294, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       propertyPath: m_LocalPosition.x

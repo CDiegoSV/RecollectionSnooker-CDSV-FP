@@ -142,8 +142,8 @@ namespace Dante.RecollectionSnooker
                         )
                     )
                 {
-                    _chosenToken = _raycastHit.collider.gameObject.GetComponent<Token>();
-                    if (_chosenToken.IsAvalaibleForFlicking) {
+                    _chosenToken = _raycastHit.collider.gameObject.GetComponent<Token>(); //by polymorphisdm
+                    if (_chosenToken != null && _chosenToken.IsAvalaibleForFlicking) {
                         _goTouchCursor.SetActive(true);
                         _goTouchCursor.transform.position = _raycastHit.point;
                         //set the parameter prior to the initialization method

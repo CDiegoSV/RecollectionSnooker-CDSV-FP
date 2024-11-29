@@ -46,9 +46,9 @@ namespace Dante.RecollectionSnooker
         #region References
 
         [SerializeField,HideInInspector] protected Rigidbody _rigidbody;
-        [SerializeField,HideInInspector] protected MeshCollider _meshCollider;
+        [SerializeField] protected Collider _meshCollider;
         [SerializeField,HideInInspector] protected MeshCollider _meshTrigger;
-        [SerializeField,HideInInspector] protected MeshRenderer _meshRenderer;
+        [SerializeField] protected MeshRenderer _meshRenderer;
 
         #endregion
 
@@ -80,7 +80,8 @@ namespace Dante.RecollectionSnooker
             if (_physicalState == TokenPhysicalStates.PHYSICAL)
             {
                 isStill = _rigidbody.velocity.magnitude < 2f &&
-                    _rigidbody.angularVelocity.magnitude < 0.1f;
+                    _rigidbody.angularVelocity.magnitude < 0.1f &&
+                    _rigidbody.GetAccumulatedForce().magnitude < 0.1f;
             }
             else //STATIC or GHOST
             {
@@ -102,10 +103,10 @@ namespace Dante.RecollectionSnooker
             {
                 _meshCollider = GetComponent<MeshCollider>();
             }
-            if (_meshRenderer == null)
-            {
-                _meshRenderer = GetComponent<MeshRenderer>();
-            }
+            //if (_meshRenderer == null)
+            //{
+            //    _meshRenderer = GetComponent<MeshRenderer>();
+            //}
         }
 
         #endregion

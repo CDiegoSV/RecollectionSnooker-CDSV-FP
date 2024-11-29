@@ -13,6 +13,8 @@ TagManager:
   - CargoZone
   - SliderX
   - SliderY
+  - Island
+  - ShipPivot
   layers:
   - Default
   - TransparentFX

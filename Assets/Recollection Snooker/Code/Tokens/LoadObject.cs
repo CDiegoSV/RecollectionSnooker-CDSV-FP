@@ -76,13 +76,13 @@ namespace Dante.RecollectionSnooker
             return false;
         }
 
-        public Cargo NearestAvailableCargo()
+        public virtual Cargo NearestAvailableCargo()
         {
             float _lastShorterDistance = 1000f;
             Cargo _lastNearestCargo = null;
             foreach (Cargo cargo in _gameReferee.AllCargoOfTheGame)
             {
-                if (TypeOfCargoIsLoaded(cargo) == false && _lastShorterDistance > Vector3.Distance(transform.position, cargo.transform.position) && !cargo.IsLoaded)
+                if (!TypeOfCargoIsLoaded(cargo) && _lastShorterDistance > Vector3.Distance(transform.position, cargo.transform.position) && !cargo.IsLoaded)
                 {
                     _lastShorterDistance = Vector3.Distance(transform.position, cargo.transform.position);
                     _lastNearestCargo = cargo;
@@ -99,6 +99,11 @@ namespace Dante.RecollectionSnooker
         public Cargo AddLoadedCargo
         {
             set { _loadedCargo.Add(value); }
+        }
+
+        public List<Cargo> GetAllLoadedCargo
+        {
+            get { return _loadedCargo; }
         }
 
         public int GetLoadedCargoCount

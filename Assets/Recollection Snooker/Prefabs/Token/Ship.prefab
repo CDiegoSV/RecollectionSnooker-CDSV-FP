@@ -236,6 +236,14 @@ PrefabInstance:
       propertyPath: _meshTrigger
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1904894473854887109, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
+      propertyPath: _meshCollider
+      value: 
+      objectReference: {fileID: 3380436684265174448}
+    - target: {fileID: 1904894473854887109, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
+      propertyPath: _meshRenderer
+      value: 
+      objectReference: {fileID: 5086924593243270525}
     - target: {fileID: 2019004945497089372, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -395,11 +403,11 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5558300717458133294, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 683719959723361403}
-    - targetCorrespondingSourceObject: {fileID: 5558300717458133294, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7364439555961141195}
+    - targetCorrespondingSourceObject: {fileID: 5558300717458133294, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 683719959723361403}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5143977119925477461, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       insertIndex: 1

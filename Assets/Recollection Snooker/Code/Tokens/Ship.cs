@@ -95,6 +95,11 @@ public class Ship : LoadObject
         }
     }
 
+    public override Cargo NearestAvailableCargo()
+    {
+        return base.NearestAvailableCargo();
+    }
+
     #endregion
 
     #region GettersSetters
@@ -103,6 +108,8 @@ public class Ship : LoadObject
     {
         set { cargoZone.SetActive(value); }
     }
+
+
 
     #endregion
 }

@@ -413,7 +413,6 @@ namespace Dante.RecollectionSnooker
         {
             _nearestAvailableCargoToTheShip = shipOfTheGame.NearestAvailableCargo();
             
-
             _nearestAvailableCargoToTheShip.IsAvalaibleForFlicking = false;
 
             //All cargo is set to Spooky
@@ -540,11 +539,23 @@ namespace Dante.RecollectionSnooker
         protected void InitializeNavigatingShipOfThePlayerState()
         {
             shipOfTheGame.StateMechanic(TokenStateMechanic.SET_SPOOKY);
+            foreach (Cargo cargo in shipOfTheGame.GetAllLoadedCargo)
+            {
+                cargo.StateMechanic(TokenStateMechanic.SET_SPOOKY);
+            }
         }
 
         protected void ExecutingNavigatingShipOfThePlayerState()
         {
-            //Translate near to the anchor.
+            if(Vector3.Distance(shipOfTheGame.gameObject.transform.position, shipPivotOfTheGame.gameObject.transform.position) > 1)
+            {
+                Debug.Log(Vector3.Distance(shipOfTheGame.gameObject.transform.position, shipPivotOfTheGame.gameObject.transform.position));
+                shipOfTheGame.transform.position = Vector3.MoveTowards(shipOfTheGame.gameObject.transform.position, shipPivotOfTheGame.gameObject.transform.position, Time.deltaTime * 4f);
+            }
+            else
+            {
+                GameStateMechanic(RS_GameStates.ANCHOR_SHIP);
+            }
         }
 
         protected void FinalizeNavigatingShipOfThePlayerState()
@@ -569,6 +580,10 @@ namespace Dante.RecollectionSnooker
         protected void FinalizeAnchorShipState()
         {
             shipOfTheGame.StateMechanic(TokenStateMechanic.SET_PHYSICS);
+            foreach (Cargo cargo in shipOfTheGame.GetAllLoadedCargo)
+            {
+                cargo.StateMechanic(TokenStateMechanic.SET_RIGID);
+            }
         }
 
         #endregion
@@ -672,6 +687,10 @@ namespace Dante.RecollectionSnooker
             if(playerHP <= 0)
             {
                 GameStateMechanic(RS_GameStates.FAILURE_OF_THE_PLAYER);
+            }
+            else
+            {
+                GameStateMechanic(RS_GameStates.SHIFT_MONSTER_PARTS);
             }
         }
 
