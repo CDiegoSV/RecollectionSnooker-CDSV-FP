@@ -88,6 +88,9 @@ namespace Dante.RecollectionSnooker
                 case RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER:
                     HandleTouchInLoadingCargo(value);
                     break;
+                case RS_GameStates.ANCHOR_SHIP:
+                    HandleTouchInAnchorShip(value);
+                    break;
                     
             }
         }
@@ -193,6 +196,43 @@ namespace Dante.RecollectionSnooker
             }
         }
 
+        protected void HandleTouchInAnchorShip(InputAction.CallbackContext value)
+        {
+            if (value.performed)
+            {
+                if (
+                    Physics.Raycast(
+                        _camera.ScreenPointToRay(value.ReadValue<Vector2>()),
+                        out _raycastHit,
+                        50.0f,
+                        LayerMask.GetMask("AnchorZone")
+                        )
+                    )
+                {
+                    _goTouchCursor.SetActive(true);
+                    _goTouchCursor.transform.position = _raycastHit.point;
+
+                    _gameReferee.GetTheShipOfTheGame.gameObject.transform.position = Vector3.Lerp(_goTouchCursor.transform.position, _gameReferee.GetTheShipOfTheGame.gameObject.transform.position, 0.5f);
+                }
+                else
+                {
+                    _goTouchCursor.SetActive(false);
+                }
+            }
+            else if (value.canceled)
+            {
+                _goTouchCursor.SetActive(false);
+                if (!_gameReferee.CargoCollidedWithMonsterPart)
+                {
+                    _gameReferee.GameStateMechanic(RS_GameStates.SHIFT_MONSTER_PARTS);
+                }
+                else
+                {
+                    _gameReferee.GameStateMechanic(RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES);
+                }
+            }
+        }
+
         protected void HandleTouchInContactPointTokenByPlayer(InputAction.CallbackContext value)
         {
             if (value.performed)
@@ -222,6 +262,8 @@ namespace Dante.RecollectionSnooker
                 }
             }
         }
+
+        
 
         #endregion HandleTouchActions
 

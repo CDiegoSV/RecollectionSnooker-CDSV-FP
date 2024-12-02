@@ -99,7 +99,7 @@ namespace Dante.RecollectionSnooker
                     transform.position = _randomPosToPlace;
                     if (Physics.SphereCast(new Vector3(_randomPosToPlace.x, _randomPosToPlace.y + 5.0f, _randomPosToPlace.z), 1.0f, -transform.up * 1.0f, out _raycastHit, 5.0f))
                     {
-                        if (_raycastHit.collider.gameObject.GetComponent<Token>())
+                        if (_raycastHit.collider.gameObject.GetComponent<Token>() != null)
                         { 
                             _tokenPhysicalFSM.StateMechanic(TokenStateMechanic.SET_SPOOKY); _canBePlacedAtPosition = false; transform.position = _randomPosToPlace; 
                         }

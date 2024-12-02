@@ -35,7 +35,7 @@ namespace Dante.RecollectionSnooker
 
         [SerializeField] protected RS_TokenFiniteStateMachine _tokenPhysicalFSM;
         //TODO:Assign remaining references to other Token child prefabs
-        [SerializeField] protected CinemachineFreeLook _freeLookCamera;
+        [SerializeField] protected CinemachineVirtualCameraBase _virtualCameraBase;
         [SerializeField] protected RS_GameReferee _gameReferee;
         [SerializeField] protected Transform _flagTransformValues;
 
@@ -100,9 +100,9 @@ namespace Dante.RecollectionSnooker
             {
                 _flagTransformValues = transform.GetChild(1).transform;
             }
-            if (_freeLookCamera == null)
+            if (_virtualCameraBase == null)
             {
-                _freeLookCamera = transform.GetChild(0).GetChild(0).GetComponent<CinemachineFreeLook>();
+                _virtualCameraBase = transform.GetChild(0).GetChild(0).GetComponent<CinemachineVirtualCameraBase>();
                 //_freeLookCamera = transform.GetComponentInChildren<CinemachineFreeLook>();
             }
         }
@@ -153,6 +153,7 @@ namespace Dante.RecollectionSnooker
                         other.gameObject.transform.position
                         ); // other.contacts[0].point);
 
+
                     //tell the referee to suggest the jump to the cannon state
                     if (this as Cargo)
                     {
@@ -173,7 +174,7 @@ namespace Dante.RecollectionSnooker
             {
                 if (other.gameObject.CompareTag("MonsterLimb"))
                 {
-                    _gameReferee.GameStateMechanic(RS_GameStates.MOVE_COUNTER_BY_SANCTION);
+                    _gameReferee.CargoCollidedWithMonsterPart = true;
                 }
             }
         }
@@ -211,6 +212,7 @@ namespace Dante.RecollectionSnooker
         public bool IsStill
         {
             get { return _tokenPhysicalFSM.IsStill; }
+            set { _tokenPhysicalFSM.IsStill = value; }
         }
 
         public bool IsAvalaibleForFlicking
@@ -219,9 +221,9 @@ namespace Dante.RecollectionSnooker
             set { _gameplayAttributes.isAvailableForFlicking = value; }
         }
 
-        public CinemachineFreeLook GetFreeLookCamera
+        public CinemachineVirtualCameraBase GetVirtualCamera
         {
-            get { return _freeLookCamera; }
+            get { return _virtualCameraBase; }
         }
 
         #endregion

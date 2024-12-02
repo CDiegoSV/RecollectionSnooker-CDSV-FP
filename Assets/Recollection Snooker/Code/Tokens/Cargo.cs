@@ -65,6 +65,10 @@ namespace Dante.RecollectionSnooker
             if (_gameReferee.GetGameState == RS_GameStates.CANNON_CARGO ||
                 _gameReferee.GetGameState == RS_GameStates.CANNON_BY_NAVIGATION)
             {
+                if (!other.gameObject.CompareTag("Floor") && !other.gameObject.CompareTag("Flag") && _gameReferee.GetInteractedToken == this)
+                {
+                    _gameReferee.AddCargoToTheCannonCameraTargetGroup = other.gameObject.transform;
+                }
                 if (other.gameObject.CompareTag("Ship") && !_isLoaded)
                 {
                     _gameReferee.CargoToBeLoaded = this;

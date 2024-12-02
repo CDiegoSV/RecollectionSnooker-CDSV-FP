@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,12 @@ namespace Dante.RecollectionSnooker
         #endregion
 
         #region References
+
+        [SerializeField] private CinemachineVirtualCameraBase _anchorShipCamera;
+
+        [SerializeField] private GameObject anchorZone;
+
+
 
         #endregion
 
@@ -70,6 +77,16 @@ namespace Dante.RecollectionSnooker
         #endregion
 
         #region GettersSetters
+
+        public bool SetAnchorZoneActive
+        {
+            set { anchorZone.transform.position = new Vector3(transform.position.x, 0.125f, transform.position.z); anchorZone.SetActive(value); }
+        }
+
+        public CinemachineVirtualCameraBase GetAnchorShipCamera
+        {
+            get { return _anchorShipCamera; }
+        }
 
         #endregion
     }

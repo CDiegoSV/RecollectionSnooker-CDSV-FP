@@ -32,7 +32,7 @@ public class Island : LoadObject
             {
                 case RS_GameStates.CANNON_BY_NAVIGATION:
                     _gameReferee.GetTheShipOfTheGame.LoadToTheIslandAllTheCargo(cargoLoadedPositions, transform);
-
+                    CheckWinCondition();
                     break;
             }
         }

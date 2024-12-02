@@ -23,7 +23,7 @@ namespace Dante.RecollectionSnooker
         ANCHOR_SHIP,
         CANNON_CARGO,
         LOADING_AND_ORGANIZING_CARGO_BY_PLAYER,
-        MOVE_COUNTER_BY_SANCTION,
+        TAKE_DAMAGE_BY_PLAYER_CHOICES,
         //END OF THE TURN
         SHIFT_MONSTER_PARTS,
         //META MECHANICS
@@ -49,6 +49,8 @@ namespace Dante.RecollectionSnooker
         [Header("Camera References")]
         [SerializeField] protected CinemachineFreeLook tableFreeLookCamera;
         [SerializeField] protected CinemachineVirtualCameraBase shipVirtualCamera;
+        [SerializeField] protected CinemachineVirtualCamera targetGroupCamera;
+        [SerializeField] protected CinemachineTargetGroup targetGroupOfTheCurrentCannonEvent;
 
         [Header("Flags")]
         [SerializeField] protected GameObject flag;
@@ -65,7 +67,7 @@ namespace Dante.RecollectionSnooker
         protected int playerHP = 6;
 
         protected new RS_GameStates _gameState;
-        protected CinemachineVirtualCameraBase _currentVirtualCameraBase;
+        [SerializeField] protected CinemachineVirtualCameraBase _currentVirtualCameraBase;
         protected Token _interactedToken;
         protected bool _isAllCargoStill;
         protected int _randomTokenPos;
@@ -116,8 +118,8 @@ namespace Dante.RecollectionSnooker
                 case RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER:
                     ExecutingLoadingAndOrganizingCargoByPlayerState();
                     break;
-                case RS_GameStates.MOVE_COUNTER_BY_SANCTION:
-                    ExecutingMoveCounterBySanctionState();
+                case RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES:
+                    ExecutingTakeDamageByPlayerChoicesState();
                     break;
                 case RS_GameStates.SHIFT_MONSTER_PARTS:
                     ExecutingShiftMonsterPartsState();
@@ -196,7 +198,7 @@ namespace Dante.RecollectionSnooker
                         FinalizeCurrentState(toNextState);
                     }
                     break;
-                case RS_GameStates.MOVE_COUNTER_BY_SANCTION:
+                case RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES:
                     if (_gameState == RS_GameStates.CANNON_CARGO)
                     {
                         FinalizeCurrentState(toNextState);
@@ -204,9 +206,10 @@ namespace Dante.RecollectionSnooker
                     break;
                 case RS_GameStates.SHIFT_MONSTER_PARTS:
                     if (_gameState == RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER ||
-                        _gameState == RS_GameStates.MOVE_COUNTER_BY_SANCTION ||
+                        _gameState == RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES ||
                         _gameState == RS_GameStates.CANNON_CARGO ||
-                        _gameState == RS_GameStates.CANNON_BY_NAVIGATION)
+                        _gameState == RS_GameStates.CANNON_BY_NAVIGATION ||
+                        _gameState == RS_GameStates.ANCHOR_SHIP)
                     {
                         FinalizeCurrentState(toNextState);
                     }
@@ -219,12 +222,17 @@ namespace Dante.RecollectionSnooker
                     }
                     break;
                 case RS_GameStates.FAILURE_OF_THE_PLAYER:
-                    if (_gameState == RS_GameStates.MOVE_COUNTER_BY_SANCTION)
+                    if (_gameState == RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES)
                     {
                         FinalizeCurrentState(toNextState);
                     }
                     break;
             }
+        }
+
+        public void ResetTheCannonCameraTargetGroup()
+        {
+            targetGroupOfTheCurrentCannonEvent.Reset();
         }
 
         #endregion
@@ -294,8 +302,8 @@ namespace Dante.RecollectionSnooker
                 case RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER:
                     InitializeLoadingAndOrganizingCargoByPlayerState();
                     break;
-                case RS_GameStates.MOVE_COUNTER_BY_SANCTION:
-                    InitializeMoveCounterBySanctionState();
+                case RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES:
+                    InitializeTakeDamageByPlayerChoicesState();
                     break;
                 case RS_GameStates.SHIFT_MONSTER_PARTS:
                     InitializeShiftMonsterPartsState();
@@ -355,6 +363,7 @@ namespace Dante.RecollectionSnooker
 
         protected void ChangeCameraTo(CinemachineVirtualCameraBase nextCamera)
         {
+            Debug.Log("ChangeCameraTo() - From: " + gameObject.name + " in the state: " + _gameState.ToString());
             if (_currentVirtualCameraBase != null)
             {
                 _currentVirtualCameraBase.Priority = 1;
@@ -413,7 +422,10 @@ namespace Dante.RecollectionSnooker
         {
             _nearestAvailableCargoToTheShip = shipOfTheGame.NearestAvailableCargo();
             
-            _nearestAvailableCargoToTheShip.IsAvalaibleForFlicking = false;
+            if( _nearestAvailableCargoToTheShip != null)
+            {
+                _nearestAvailableCargoToTheShip.IsAvalaibleForFlicking = false;
+            }
 
             //All cargo is set to Spooky
             foreach (Cargo cargo in allCargoOfTheGame)
@@ -461,8 +473,7 @@ namespace Dante.RecollectionSnooker
         {
             _interactedToken.StateMechanic(TokenStateMechanic.SET_PHYSICS);
             //Focus to the camera rig of the selected token
-            _currentVirtualCameraBase = _interactedToken.GetFreeLookCamera;
-            _currentVirtualCameraBase.Priority = 1000;
+            ChangeCameraTo(_interactedToken.GetVirtualCamera);
         }
 
         protected void ExecutingContactPointTokenByPlayerState()
@@ -499,7 +510,7 @@ namespace Dante.RecollectionSnooker
             flag.gameObject.SetActive(false);
             flag.transform.rotation = Quaternion.identity;
             flag.gameObject.transform.localPosition = _originalPositionOfTheFlag;
-            _nearestAvailableCargoToTheShip.gameObject.SetActive(true);
+            _nearestAvailableCargoToTheShip?.gameObject.SetActive(true);
             _nearestAvailableCargoToTheShip = null;
         }
 
@@ -512,6 +523,9 @@ namespace Dante.RecollectionSnooker
             _nearestAvailableCargoToTheShip?.gameObject.SetActive(true);
             _nearestAvailableCargoToTheShip = null;
             _aCargoCollidedWithMonsterPart = false;
+            ChangeCameraTo(targetGroupCamera);
+            ResetTheCannonCameraTargetGroup();
+            AddCargoToTheCannonCameraTargetGroup = _interactedToken.transform;
 
             foreach (Cargo cargo in allCargoOfTheGame)
             {
@@ -529,7 +543,7 @@ namespace Dante.RecollectionSnooker
 
         protected void FinalizeCannonByNavigationState()
         {
-
+            ChangeCameraTo(shipVirtualCamera);
         }
 
         #endregion
@@ -549,7 +563,6 @@ namespace Dante.RecollectionSnooker
         {
             if(Vector3.Distance(shipOfTheGame.gameObject.transform.position, shipPivotOfTheGame.gameObject.transform.position) > 1)
             {
-                Debug.Log(Vector3.Distance(shipOfTheGame.gameObject.transform.position, shipPivotOfTheGame.gameObject.transform.position));
                 shipOfTheGame.transform.position = Vector3.MoveTowards(shipOfTheGame.gameObject.transform.position, shipPivotOfTheGame.gameObject.transform.position, Time.deltaTime * 4f);
             }
             else
@@ -569,7 +582,8 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeAnchorShipState()
         {
-
+            ChangeCameraTo(shipPivotOfTheGame.GetAnchorShipCamera);
+            shipPivotOfTheGame.SetAnchorZoneActive = true;
         }
 
         protected void ExecutingAnchorShipState()
@@ -579,7 +593,8 @@ namespace Dante.RecollectionSnooker
 
         protected void FinalizeAnchorShipState()
         {
-            shipOfTheGame.StateMechanic(TokenStateMechanic.SET_PHYSICS);
+            shipPivotOfTheGame.SetAnchorZoneActive = false;
+            shipOfTheGame.StateMechanic(TokenStateMechanic.SET_RIGID);
             foreach (Cargo cargo in shipOfTheGame.GetAllLoadedCargo)
             {
                 cargo.StateMechanic(TokenStateMechanic.SET_RIGID);
@@ -595,6 +610,9 @@ namespace Dante.RecollectionSnooker
             _nearestAvailableCargoToTheShip?.gameObject.SetActive(true);
             _nearestAvailableCargoToTheShip = null;
             _aCargoCollidedWithMonsterPart = false;
+            ChangeCameraTo(targetGroupCamera);
+            ResetTheCannonCameraTargetGroup();
+            AddCargoToTheCannonCameraTargetGroup = _interactedToken.transform;
 
             foreach (Cargo cargo in allCargoOfTheGame)
             {
@@ -608,7 +626,7 @@ namespace Dante.RecollectionSnooker
             {
                 if (_aCargoCollidedWithMonsterPart)
                 {
-                    GameStateMechanic(RS_GameStates.MOVE_COUNTER_BY_SANCTION);
+                    GameStateMechanic(RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES);
                     _aCargoCollidedWithMonsterPart = false;
                 }
                 else
@@ -679,11 +697,14 @@ namespace Dante.RecollectionSnooker
 
         #endregion
 
-        #region MoveCounterBySanction
+        #region TakeDamageByPlayerChoices
 
-        protected void InitializeMoveCounterBySanctionState()
+        protected void InitializeTakeDamageByPlayerChoicesState()
         {
+            _cargoToBeLoaded = null;
+            
             playerHP--;
+            Debug.Log("Damage Taken - Current Life: " + playerHP.ToString());
             if(playerHP <= 0)
             {
                 GameStateMechanic(RS_GameStates.FAILURE_OF_THE_PLAYER);
@@ -694,12 +715,12 @@ namespace Dante.RecollectionSnooker
             }
         }
 
-        protected void ExecutingMoveCounterBySanctionState()
+        protected void ExecutingTakeDamageByPlayerChoicesState()
         {
 
         }
 
-        protected void FinalizeMoveCounterBySanctionState()
+        protected void FinalizeTakeDamageByPlayerChoicesState()
         {
 
         }
@@ -787,9 +808,10 @@ namespace Dante.RecollectionSnooker
             get { return flag; }
         }
 
-        public bool SetCargoCollidedWithMonsterPart
+        public bool CargoCollidedWithMonsterPart
         {
             set { _aCargoCollidedWithMonsterPart = value; }
+            get { return _aCargoCollidedWithMonsterPart; }
         }
 
         public Cargo CargoToBeLoaded
@@ -813,6 +835,15 @@ namespace Dante.RecollectionSnooker
             get { return shipOfTheGame; }
         }
 
+        public Transform AddCargoToTheCannonCameraTargetGroup
+        {
+            set { targetGroupOfTheCurrentCannonEvent.AddMember(value, 1, 0); }
+        }
+
+        public Token GetInteractedToken
+        {
+            get { return _interactedToken; }
+        }
         #endregion
     }
 }

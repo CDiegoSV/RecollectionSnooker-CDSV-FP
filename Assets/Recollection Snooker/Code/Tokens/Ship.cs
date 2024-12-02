@@ -81,17 +81,33 @@ public class Ship : LoadObject
     {
         if(_loadedCargo.Count > 0)
         {
-            for (int i = 0; i < cargoPositions.Length; i++)
+            for (int i = 0; i < _loadedCargo.Count; i++)
             {
-                if (!islandTransform.gameObject.GetComponent<Island>().TypeOfCargoIsLoaded(_loadedCargo[i]))
+                if (islandTransform.gameObject.GetComponent<Island>().GetLoadedCargoCount > 0 && !islandTransform.gameObject.GetComponent<Island>().TypeOfCargoIsLoaded(_loadedCargo[i]))
                 {
+                    _loadedCargo[i].StateMechanic(TokenStateMechanic.SET_PHYSICS);
                     _loadedCargo[i].gameObject.transform.position = cargoPositions[islandTransform.gameObject.GetComponent<Island>().GetLoadedCargoCount].position;
                     _loadedCargo[i].gameObject.transform.SetParent(islandTransform);
-                    _loadedCargo.Remove(_loadedCargo[i]);
+                    _loadedCargo[i].gameObject.transform.rotation = Quaternion.identity;
                     islandTransform.gameObject.GetComponent<Island>().AddLoadedCargo = _loadedCargo[i];
-                    _loadedCargo[i].StateMechanic(TokenStateMechanic.SET_RIGID);
+                    _loadedCargo.Remove(_loadedCargo[i]);
+                }
+                else if(islandTransform.gameObject.GetComponent<Island>().GetLoadedCargoCount == 0)
+                {
+                    _loadedCargo[i].StateMechanic(TokenStateMechanic.SET_PHYSICS);
+                    _loadedCargo[i].gameObject.transform.position = cargoPositions[islandTransform.gameObject.GetComponent<Island>().GetLoadedCargoCount].position;
+                    _loadedCargo[i].gameObject.transform.SetParent(islandTransform);
+                    _loadedCargo[i].gameObject.transform.rotation = Quaternion.identity;
+                    _loadedCargo[i].IsStill = true;
+                    islandTransform.gameObject.GetComponent<Island>().AddLoadedCargo = _loadedCargo[i];
+                    _loadedCargo.Remove(_loadedCargo[i]);
                 }
             }
+        }
+        foreach (Cargo cargo in islandTransform.gameObject.GetComponent<Island>().GetAllLoadedCargo)
+        {
+            cargo.IsLoaded = true;
+            cargo.IsAvalaibleForFlicking = false;
         }
     }
 
