@@ -45,12 +45,13 @@ namespace Dante.RecollectionSnooker
         [SerializeField] protected Ship shipOfTheGame;
         [SerializeField] protected ShipPivot shipPivotOfTheGame;
         [SerializeField] protected MonsterPart monsterHead;
+        [SerializeField] protected Island islandOftheGame;
 
         [Header("Camera References")]
         [SerializeField] protected CinemachineFreeLook tableFreeLookCamera;
         [SerializeField] protected CinemachineVirtualCameraBase shipVirtualCamera;
         [SerializeField] protected CinemachineVirtualCamera targetGroupCamera;
-        [SerializeField] protected CinemachineTargetGroup targetGroupOfTheCurrentCannonEvent;
+        [SerializeField] protected RS_Cinemachine_TargetGroup targetGroupOfTheCurrentCannonEvent;
 
         [Header("Flags")]
         [SerializeField] protected GameObject flag;
@@ -136,11 +137,6 @@ namespace Dante.RecollectionSnooker
         #endregion
 
         #region PublicMethods
-
-        public void DebugInMobile(string value)
-        {
-            debugText.text = value;
-        }
 
         public void GameStateMechanic(RS_GameStates toNextState)
         {
@@ -232,7 +228,7 @@ namespace Dante.RecollectionSnooker
 
         public void ResetTheCannonCameraTargetGroup()
         {
-            targetGroupOfTheCurrentCannonEvent.Reset();
+            targetGroupOfTheCurrentCannonEvent.ResetTargetGroup();
         }
 
         #endregion
@@ -443,7 +439,7 @@ namespace Dante.RecollectionSnooker
             //Check available cargo for flicking
             foreach (Cargo cargo in allCargoOfTheGame)
             {
-                if (!cargo.IsLoaded && !shipOfTheGame.TypeOfCargoIsLoaded(cargo) && cargo != _nearestAvailableCargoToTheShip)
+                if (!cargo.IsLoaded && !shipOfTheGame.TypeOfCargoIsLoaded(cargo) && cargo != _nearestAvailableCargoToTheShip && !islandOftheGame.TypeOfCargoIsLoaded(cargo))
                 {
                     cargo.SetHighlight(true);
                     cargo.IsAvalaibleForFlicking = true;
@@ -755,7 +751,7 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeVictoryOfThePlayerState()
         {
-
+            UIManager.Instance.MetaPanel(true);
         }
 
         protected void ExecutingVictoryOfThePlayerState()
@@ -774,7 +770,7 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeFailureOfThePlayerState()
         {
-
+            UIManager.Instance.MetaPanel(false);
         }
 
         protected void ExecutingFailureOfThePlayerState()
@@ -844,6 +840,12 @@ namespace Dante.RecollectionSnooker
         {
             get { return _interactedToken; }
         }
+
+        public int GetCurrentLifeOfThePlayer
+        {
+            get { return playerHP; }
+        }
+
         #endregion
     }
 }

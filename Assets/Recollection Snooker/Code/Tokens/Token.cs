@@ -62,19 +62,11 @@ namespace Dante.RecollectionSnooker
             
         }
 
-        private void OnCollisionEnter(Collision other)
-        {
-            _gameReferee.DebugInMobile(gameObject.name + 
-                " OnCollisionEnter() - Detected collision with " + 
-                other.gameObject.name);
-            //ValidateCollision(other);
-        }
+
 
         private void OnTriggerEnter(Collider other)
         {
-            _gameReferee.DebugInMobile(gameObject.name +
-                " OnTriggerEnter() - Detected collision with " + 
-                other.gameObject.name);
+
             ValidateTrigger(other);
         }
 
@@ -109,11 +101,9 @@ namespace Dante.RecollectionSnooker
 
         protected virtual void ValidateTrigger(Collider other)
         {
-            _gameReferee.DebugInMobile(" Validate Collision " + other.gameObject.name);
             switch (_gameReferee.GetGameState)
             { 
                 case RS_GameStates.FLICK_TOKEN_BY_PLAYER:
-                    _gameReferee.DebugInMobile("FLICK_TOKEN_BY_PLAYER " + other.gameObject.name);
                     ValidateTriggerWithFlag(other);
                     break;
                 case RS_GameStates.CANNON_CARGO:
@@ -127,10 +117,8 @@ namespace Dante.RecollectionSnooker
         {
             if (this as Cargo || this as ShipPivot) //Polymorphism
             {
-                _gameReferee.DebugInMobile("I am a Cargo or ShipPivot " + other.gameObject.name);
                 if (other.gameObject.CompareTag("Flag")) //other = flag
                 {
-                    _gameReferee.DebugInMobile("I detected a flag " + other.gameObject.name);
                     //Obtain the push direction
                     //by obtaining the rotation in the X axis
                     _flagTransform = other.gameObject.transform; //pointer refrence
@@ -158,7 +146,6 @@ namespace Dante.RecollectionSnooker
                     if (this as Cargo)
                     {
                         _gameReferee.GameStateMechanic(RS_GameStates.CANNON_CARGO);
-                        _gameReferee.DebugInMobile("CANNON " + other.gameObject.name);
                     }
                     else if (this as ShipPivot)
                     {
@@ -175,6 +162,7 @@ namespace Dante.RecollectionSnooker
                 if (other.gameObject.CompareTag("MonsterLimb"))
                 {
                     _gameReferee.CargoCollidedWithMonsterPart = true;
+                    UIManager.Instance.HeartLoss(_gameReferee.GetCurrentLifeOfThePlayer - 1);
                 }
             }
         }

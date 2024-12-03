@@ -42,29 +42,29 @@ public class Ship : LoadObject
         }
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.collider.CompareTag("Cargo"))
-        {
-            switch (_gameReferee.GetGameState)
-            {
-                case RS_GameStates.CANNON_BY_NAVIGATION:
-                case RS_GameStates.CANNON_CARGO:
-                    if (collision.gameObject.GetComponent<Cargo>().IsLoaded)
-                    {
-                        _loadedCargo.Remove(collision.gameObject.GetComponent<Cargo>());
-                        foreach (Cargo cargo in _gameReferee.AllCargoOfTheGame)
-                        {
-                            if (cargo.cargoType == collision.gameObject.GetComponent<Cargo>().cargoType)
-                            {
-                                cargo.IsAvalaibleForFlicking = true;
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-    }
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.collider.CompareTag("Cargo"))
+    //    {
+    //        switch (_gameReferee.GetGameState)
+    //        {
+    //            case RS_GameStates.CANNON_BY_NAVIGATION:
+    //            case RS_GameStates.CANNON_CARGO:
+    //                if (collision.gameObject.GetComponent<Cargo>().IsLoaded)
+    //                {
+    //                    _loadedCargo.Remove(collision.gameObject.GetComponent<Cargo>());
+    //                    foreach (Cargo cargo in _gameReferee.AllCargoOfTheGame)
+    //                    {
+    //                        if (cargo.cargoType == collision.gameObject.GetComponent<Cargo>().cargoType)
+    //                        {
+    //                            cargo.IsAvalaibleForFlicking = true;
+    //                        }
+    //                    }
+    //                }
+    //                break;
+    //        }
+    //    }
+    //}
 
     private void OnDrawGizmos()
     {

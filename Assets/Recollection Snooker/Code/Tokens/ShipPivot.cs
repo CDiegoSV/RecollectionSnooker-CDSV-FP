@@ -48,10 +48,17 @@ namespace Dante.RecollectionSnooker
 
         }
 
-        //private void OnCollisionEnter(Collision other)
-        //{
-        //    ValidateCollision(other);
-        //}
+        private void OnCollisionEnter(Collision other)
+        {
+            if (_gameReferee.GetGameState == RS_GameStates.CANNON_CARGO ||
+               _gameReferee.GetGameState == RS_GameStates.CANNON_BY_NAVIGATION)
+            {
+                if (!other.gameObject.CompareTag("Floor") && !other.gameObject.CompareTag("Flag") && _gameReferee.GetInteractedToken == this)
+                {
+                    _gameReferee.AddCargoToTheCannonCameraTargetGroup = other.gameObject.transform;
+                }
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {
