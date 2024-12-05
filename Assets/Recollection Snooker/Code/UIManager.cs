@@ -42,7 +42,16 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+    
+    public void LoadScene(int sceneId)
+    {
+        SceneManager.LoadScene(sceneId);
+    }
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
 
     public void MetaPanel(bool thePlayerWins)
     {

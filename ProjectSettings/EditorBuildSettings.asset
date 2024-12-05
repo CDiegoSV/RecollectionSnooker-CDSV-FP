@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Recollection Snooker/Scenes/Menu.unity
+    guid: cb361b8b6e1e9364c80500de85164c94
+  - enabled: 1
     path: Assets/Recollection Snooker/Scenes/GameScene.unity
     guid: e44eaae486fc6454e9019390bd150db9
   m_configObjects: {}

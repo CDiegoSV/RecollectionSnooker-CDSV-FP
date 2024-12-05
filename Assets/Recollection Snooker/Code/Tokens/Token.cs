@@ -119,25 +119,25 @@ namespace Dante.RecollectionSnooker
             {
                 if (other.gameObject.CompareTag("Flag")) //other = flag
                 {
-                    //Obtain the push direction
-                    //by obtaining the rotation in the X axis
-                    _flagTransform = other.gameObject.transform; //pointer refrence
-                    //_flagTransformValues = _flagTransform; //NO USE: pointer reference
-                    _flagTransformValues.forward = _flagTransform.forward; //copy values by Vector3
-                    _flagTransformValues.position = _flagTransform.position; //copy values by Vector3
-                    //and adding -90° to obtained direction
-                    _flagTransformValues.Rotate(
-                        _flagTransformValues.right, //my own X axis
-                        -90f,
-                        Space.Self //localRotation
-                        );
+                    ////Obtain the push direction
+                    ////by obtaining the rotation in the X axis
+                    //_flagTransform = other.gameObject.transform; //pointer refrence
+                    ////_flagTransformValues = _flagTransform; //NO USE: pointer reference
+                    //_flagTransformValues.forward = _flagTransform.forward; //copy values by Vector3
+                    //_flagTransformValues.position = _flagTransform.position; //copy values by Vector3
+                    ////and adding -90° to obtained direction
+                    //_flagTransformValues.Rotate(
+                    //    _flagTransformValues.right, //my own X axis
+                    //    -90f,
+                    //    Space.Self //localRotation
+                    //    );
 
-                    _contactedFlag = _flagTransform.gameObject.GetComponent<Flag>();
+                    _contactedFlag = other.gameObject.GetComponent<Flag>();
                     //TODO: Project a Raycast from the tip of the flag to the Token,
                     //to obtain the point of contact
                     //other.contacts[0].point it gives us the specefic point of contact
                     _tokenPhysicalFSM.ThrowTokenAtSpecificPosition(
-                        _flagTransformValues.forward * (Mathf.Abs(_contactedFlag.DeltaXDegrees) + 1f * 4f),
+                        other.gameObject.transform.GetChild(0).forward * (Mathf.Abs(_contactedFlag.DeltaXDegrees) + 1f * 4f),
                         other.gameObject.transform.position
                         ); // other.contacts[0].point);
 

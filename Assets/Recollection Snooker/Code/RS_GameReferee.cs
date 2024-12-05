@@ -263,7 +263,7 @@ namespace Dante.RecollectionSnooker
 
         protected override void InitializeGameReferee()
         {
-            _currentVirtualCameraBase = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CinemachineVirtualCameraBase>();
+            _currentVirtualCameraBase = tableFreeLookCamera;
 
             _gameState = RS_GameStates.SHOW_THE_LAYOUT_TO_THE_PLAYER;  //(RS_GameStates)0;
             //InitializeDropCargoState();
