@@ -71,6 +71,29 @@ namespace Dante.RecollectionSnooker
                     break;
             }
         }
+
+        public void OKButton()
+        {
+            switch (_gameReferee.GetGameState)
+            {
+                case RS_GameStates.LOADING_AND_ORGANIZING_CARGO_BY_PLAYER:
+                    _goTouchCursor.SetActive(false);
+                    _gameReferee.GameStateMechanic(RS_GameStates.SHIFT_MONSTER_PARTS);
+                    break;
+
+                case RS_GameStates.ANCHOR_SHIP:
+                    _goTouchCursor.SetActive(false);
+                    if (!_gameReferee.CargoCollidedWithMonsterPart)
+                    {
+                        _gameReferee.GameStateMechanic(RS_GameStates.SHIFT_MONSTER_PARTS);
+                    }
+                    else
+                    {
+                        _gameReferee.GameStateMechanic(RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES);
+                    }
+                    break;
+            }
+        }
         #endregion
 
         #region LocalMethods
@@ -253,6 +276,7 @@ namespace Dante.RecollectionSnooker
                     {
                         _goTouchCursor.SetActive(true);
                         _goTouchCursor.transform.position = _raycastHit.point;
+                        _contactToken = null;
                         _gameReferee.GameStateMechanic(RS_GameStates.FLICK_TOKEN_BY_PLAYER);
                     }
                 }

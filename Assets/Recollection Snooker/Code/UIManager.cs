@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject winPanel;
     [SerializeField] GameObject LosePanel;
 
+    [SerializeField] GameObject okButton;
+
     #endregion
 
     #region Public Methods
@@ -53,5 +55,11 @@ public class UIManager : MonoBehaviour
             LosePanel.SetActive(true);
         }
     }
+
+    public void ToggleOkButton()
+    {
+        okButton.SetActive(!okButton.activeSelf);
+    }
+
     #endregion
 }

@@ -28,6 +28,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 145464e75f118af408f6bad687a86675, type: 2}
+    - target: {fileID: 1904894473854887109, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
+      propertyPath: materialAssets.ghostMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c322d6888191623418df2c97162af010, type: 2}
+    - target: {fileID: 1904894473854887109, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
+      propertyPath: materialAssets.physicalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 145464e75f118af408f6bad687a86675, type: 2}
     - target: {fileID: 2019004945497089372, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.41925132
@@ -136,17 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acfcf3bf260284942b06a51ecfcb699c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4418522895255398430 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3549645994455276616, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
-  m_PrefabInstance: {fileID: 870143675643327574}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 319d2fe34a804e245819465c9505ea59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5435929411954201603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5143977119925477461, guid: f10daa9a6c2cec848b5b54d240472219, type: 3}
@@ -165,7 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tokenPhysicalFSM: {fileID: 1620403605238206611}
-  _freeLookCamera: {fileID: 4418522895255398430}
+  _virtualCameraBase: {fileID: 0}
   _gameReferee: {fileID: 0}
   _flagTransformValues: {fileID: 6944561777638521691}
   _gameplayAttributes:

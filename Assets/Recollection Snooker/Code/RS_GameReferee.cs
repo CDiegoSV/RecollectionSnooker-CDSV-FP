@@ -195,7 +195,8 @@ namespace Dante.RecollectionSnooker
                     }
                     break;
                 case RS_GameStates.TAKE_DAMAGE_BY_PLAYER_CHOICES:
-                    if (_gameState == RS_GameStates.CANNON_CARGO)
+                    if (_gameState == RS_GameStates.CANNON_CARGO ||
+                        _gameState == RS_GameStates.ANCHOR_SHIP)
                     {
                         FinalizeCurrentState(toNextState);
                     }
@@ -262,6 +263,8 @@ namespace Dante.RecollectionSnooker
 
         protected override void InitializeGameReferee()
         {
+            _currentVirtualCameraBase = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CinemachineVirtualCameraBase>();
+
             _gameState = RS_GameStates.SHOW_THE_LAYOUT_TO_THE_PLAYER;  //(RS_GameStates)0;
             //InitializeDropCargoState();
             InitializeState();
@@ -416,6 +419,11 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeChooseTokenByPlayerState()
         {
+            if(_currentVirtualCameraBase.gameObject.GetComponent<CinemachineMobileInputProvider>() != null)
+            {
+                _currentVirtualCameraBase.gameObject.GetComponent<CinemachineMobileInputProvider>().enableCameraRig = true;
+            }
+
             _nearestAvailableCargoToTheShip = shipOfTheGame.NearestAvailableCargo();
             
             if( _nearestAvailableCargoToTheShip != null)
@@ -467,6 +475,8 @@ namespace Dante.RecollectionSnooker
 
         protected void InitializeContactPointTokenByPlayerState()
         {
+            _currentVirtualCameraBase.gameObject.GetComponent<CinemachineMobileInputProvider>().enableCameraRig = true;
+
             _interactedToken.StateMechanic(TokenStateMechanic.SET_PHYSICS);
             //Focus to the camera rig of the selected token
             ChangeCameraTo(_interactedToken.GetVirtualCamera);
@@ -580,6 +590,7 @@ namespace Dante.RecollectionSnooker
         {
             ChangeCameraTo(shipPivotOfTheGame.GetAnchorShipCamera);
             shipPivotOfTheGame.SetAnchorZoneActive = true;
+            UIManager.Instance.ToggleOkButton();
         }
 
         protected void ExecutingAnchorShipState()
@@ -595,6 +606,8 @@ namespace Dante.RecollectionSnooker
             {
                 cargo.StateMechanic(TokenStateMechanic.SET_RIGID);
             }
+            UIManager.Instance.ToggleOkButton();
+
         }
 
         #endregion
@@ -665,6 +678,7 @@ namespace Dante.RecollectionSnooker
             
             _cargoToBeLoaded.StateMechanic(TokenStateMechanic.SET_SPOOKY);
             _cargoToBeLoaded.IsLoaded = true;
+            UIManager.Instance.ToggleOkButton();
 
         }
 
@@ -689,6 +703,7 @@ namespace Dante.RecollectionSnooker
             }
 
             _cargoToBeLoaded = null;
+            UIManager.Instance.ToggleOkButton();
         }
 
         #endregion
